@@ -47,8 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AllInfoServers.cs" />
     <Compile Include="Models\GameServer.cs" />
     <Compile Include="Models\InfoGame.cs" />
+    <Compile Include="Models\IRequestHandler.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="StatServer.cs" />

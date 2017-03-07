@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Kontur.GameStats.Server.Models;
+using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +14,7 @@ namespace Kontur.GameStats.Server
         {
             listener = new HttpListener();
         }
-        
+
         public void Start(string prefix)
         {
             lock (listener)
@@ -29,7 +31,7 @@ namespace Kontur.GameStats.Server
                         Priority = ThreadPriority.Highest
                     };
                     listenerThread.Start();
-                    
+
                     isRunning = true;
                 }
             }
@@ -46,7 +48,7 @@ namespace Kontur.GameStats.Server
 
                 listenerThread.Abort();
                 listenerThread.Join();
-                
+
                 isRunning = false;
             }
         }
@@ -62,7 +64,7 @@ namespace Kontur.GameStats.Server
 
             listener.Close();
         }
-        
+
         private void Listen()
         {
             while (true)
@@ -72,7 +74,7 @@ namespace Kontur.GameStats.Server
                     if (listener.IsListening)
                     {
                         var context = listener.GetContext();
-                       
+
                         Task.Run(() => HandleContextAsync(context));
                     }
                     else Thread.Sleep(0);
@@ -97,15 +99,56 @@ namespace Kontur.GameStats.Server
             {
                 var text = reader.ReadToEnd();
             }
-            var handler = MapRequestHandler(type);
-            handler.RequestHanle(url, json);
+            //ThreadPool.QueueUserWorkItem((_) =>
+            //{
+            //    string methodName = listenerContext.Request.Url.Segments[1].Replace("/", "");
+            //    string[] strParams = listenerContext.Request.Url
+            //                            .Segments
+            //                            .Skip(2)
+            //                            .Select(s => s.Replace("/", ""))
+            //                            .ToArray();
+
+
+            //    var method = this.GetType().GetMethod(methodName);
+            //    object[] @params = method.GetParameters()
+            //                        .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
+            //                        .ToArray();
+
+            //    object ret = method.Invoke(this, @params);
+            //    //string retstr = JsonConvert.SerializeObject(ret);
+            //});
+
+            var type = SelectType(listenerContext.Request.HttpMethod, listenerContext.Request.Url.ToString());
+            //var handler = MapRequestHandler(type);
+            //handler.RequestHanle(url, json);
+
             listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
             using (var writer = new StreamWriter(listenerContext.Response.OutputStream))
                 writer.WriteLine("Hello, world!");
         }
-        public IRequestHandler MapRequestHandler(string type)
+        public IRequestHandler MapRequestHandler(int type)
         {
-            //switch type - return one of 7 classes
+            switch (type)
+            {
+                case 1: return new AllInfoServers();
+                default: return new AllInfoServers();
+            }
+
+        }
+        public int SelectType(string httpMethod, string url)
+        {
+            if (url == "/servers/info")
+                return 1;
+            string[] segments = url.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            if (segments[0] == "servers" && segments[2] == "info" && httpMethod == "GET")
+            {
+                return 2;
+            }
+            if (segments[0] == "servers" && segments[2] == "info" && httpMethod == "POST")
+            {
+                return 2;
+            }
+            return 2;
         }
 
         private readonly HttpListener listener;
