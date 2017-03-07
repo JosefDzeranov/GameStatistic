@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.Models
 {
-    class GameServer
+    class InfoGame
     {
-        public string EndPoint { get; set; }
-        public InfoGame Info { get; set; }
+        public string Name { get; set; }
+        public string[] GameModes { get; set; }
     }
 }
