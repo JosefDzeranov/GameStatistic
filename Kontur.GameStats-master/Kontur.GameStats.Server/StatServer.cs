@@ -1,17 +1,19 @@
-﻿using Kontur.GameStats.Server.Models;
+﻿using Kontur.GameStats.Server.Handlers;
+using Kontur.GameStats.Server.Models;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-
 namespace Kontur.GameStats.Server
 {
     internal class StatServer : IDisposable
     {
-        public StatServer()
+        private readonly IRequestParser _requestParser;
+        public StatServer(IRequestParser requestParser)
         {
+            _requestParser = requestParser;
             listener = new HttpListener();
         }
 
@@ -94,62 +96,50 @@ namespace Kontur.GameStats.Server
         private async Task HandleContextAsync(HttpListenerContext listenerContext)
         {
             // TODO: implement request handling
+
             using (var reader = new StreamReader(listenerContext.Request.InputStream,
                                     listenerContext.Request.ContentEncoding))
             {
                 var text = reader.ReadToEnd();
+
+
+                //ThreadPool.QueueUserWorkItem((_) =>
+                //{
+                //    string methodName = listenerContext.Request.Url.Segments[1].Replace("/", "");
+                //    string[] strParams = listenerContext.Request.Url
+                //                            .Segments
+                //                            .Skip(2)
+                //                            .Select(s => s.Replace("/", ""))
+                //                            .ToArray();
+
+
+                //    var method = this.GetType().GetMethod(methodName);
+                //    object[] @params = method.GetParameters()
+                //                        .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
+                //                        .ToArray();
+
+                //    object ret = method.Invoke(this, @params);
+                //    //string retstr = JsonConvert.SerializeObject(ret);
+                //});
+                var parameters = _requestParser.Parse(listenerContext.Request.HttpMethod, listenerContext.Request.Url.ToString(), text);
+                var handler = MapRequestHandler(parameters);
+                handler.RequestHandle(parameters);
+
+                listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                using (var writer = new StreamWriter(listenerContext.Response.OutputStream))
+                    writer.WriteLine("Hello, world!");
             }
-            //ThreadPool.QueueUserWorkItem((_) =>
-            //{
-            //    string methodName = listenerContext.Request.Url.Segments[1].Replace("/", "");
-            //    string[] strParams = listenerContext.Request.Url
-            //                            .Segments
-            //                            .Skip(2)
-            //                            .Select(s => s.Replace("/", ""))
-            //                            .ToArray();
-
-
-            //    var method = this.GetType().GetMethod(methodName);
-            //    object[] @params = method.GetParameters()
-            //                        .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
-            //                        .ToArray();
-
-            //    object ret = method.Invoke(this, @params);
-            //    //string retstr = JsonConvert.SerializeObject(ret);
-            //});
-
-            var type = SelectType(listenerContext.Request.HttpMethod, listenerContext.Request.Url.ToString());
-            //var handler = MapRequestHandler(type);
-            //handler.RequestHanle(url, json);
-
-            listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
-            using (var writer = new StreamWriter(listenerContext.Response.OutputStream))
-                writer.WriteLine("Hello, world!");
         }
-        public IRequestHandler MapRequestHandler(int type)
+        public IRequestHandler MapRequestHandler(GameParameters parameters)
         {
-            switch (type)
+            var type = parameters.GetType();
+            if(type== typeof(MatchInfoParameter))
             {
-                case 1: return new AllInfoServers();
-                default: return new AllInfoServers();
+                return new MachInfoHandler();
             }
+            return null;
+        }
 
-        }
-        public int SelectType(string httpMethod, string url)
-        {
-            if (url == "/servers/info")
-                return 1;
-            string[] segments = url.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            if (segments[0] == "servers" && segments[2] == "info" && httpMethod == "GET")
-            {
-                return 2;
-            }
-            if (segments[0] == "servers" && segments[2] == "info" && httpMethod == "POST")
-            {
-                return 2;
-            }
-            return 2;
-        }
 
         private readonly HttpListener listener;
 

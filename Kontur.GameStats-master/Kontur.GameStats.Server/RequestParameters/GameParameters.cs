@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.Models
 {
-    class AllInfoServers : IRequestHandler
+    abstract class GameParameters
     {
-        public void RequestHanle(string url, string json)
-        {
-            
-        }
+
     }
 }

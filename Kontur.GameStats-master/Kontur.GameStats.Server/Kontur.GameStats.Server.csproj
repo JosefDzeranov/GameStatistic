@@ -37,6 +37,10 @@
       <HintPath>..\packages\FluentCommandLineParser.1.4.3\lib\net35\FluentCommandLineParser.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,12 +51,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\AllInfoServers.cs" />
+    <Compile Include="Handlers\AllInfoServersHandler.cs" />
+    <Compile Include="RequestParameters\EmptyParametters.cs" />
+    <Compile Include="Handlers\GameInfoHandler.cs" />
+    <Compile Include="RequestParameters\GameInfoParrameters.cs" />
+    <Compile Include="RequestParameters\GameParameters.cs" />
     <Compile Include="Models\GameServer.cs" />
     <Compile Include="Models\InfoGame.cs" />
-    <Compile Include="Models\IRequestHandler.cs" />
+    <Compile Include="Handlers\IRequestHandler.cs" />
+    <Compile Include="Models\IRequestParser.cs" />
+    <Compile Include="Handlers\MatchInfoHandler.cs" />
     <Compile Include="Models\Match.cs" />
+    <Compile Include="RequestParameters\MatchInfoParameter.cs" />
     <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\RequestParser.cs" />
+    <Compile Include="Models\ServerResponse.cs" />
     <Compile Include="StatServer.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,6 +73,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entity\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
