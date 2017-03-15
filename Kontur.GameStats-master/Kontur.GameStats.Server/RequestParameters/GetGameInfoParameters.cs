@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontur.GameStats.Server.Models
+namespace Kontur.GameStats.Server.RequestParameters
 {
-    class GameServer
+    class GetGameInfoParameters:GameParameters
     {
         public string EndPoint { get; set; }
-        public InfoGame Info { get; set; }
     }
 }

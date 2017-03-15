@@ -1,5 +1,6 @@
 ﻿using System;
 using Fclp;
+using Kontur.GameStats.Server.Models;
 
 namespace Kontur.GameStats.Server
 {
@@ -28,7 +29,7 @@ namespace Kontur.GameStats.Server
 
         private static void RunServer(Options options)
         {
-            using (var server = new StatServer())
+            using (var server = new StatServer(new RequestParser()))
             {
                 server.Start(options.Prefix);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kontur.GameStats.Server.RequestParameters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

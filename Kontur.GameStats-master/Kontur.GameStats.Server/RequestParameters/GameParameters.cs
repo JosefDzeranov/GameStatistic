@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontur.GameStats.Server.Models
+namespace Kontur.GameStats.Server.RequestParameters
 {
     abstract class GameParameters
     {

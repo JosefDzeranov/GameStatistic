@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kontur.GameStats.Server.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.RequestParameters
 {
-    class MatchInfoParameter : GameParameters
+    class PutGameInfoParameters : GameParameters
     {
-        public string EndPoint { get; set; }
-        public string Timestamp { get; set; }
         public string Json { get; set; }
+        public string EndPoint { get; set; }
+       
+
     }
 }

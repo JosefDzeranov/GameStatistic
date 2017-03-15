@@ -1,5 +1,6 @@
 ﻿using Kontur.GameStats.Server.Handlers;
 using Kontur.GameStats.Server.Models;
+using Kontur.GameStats.Server.RequestParameters;
 using System;
 using System.IO;
 using System.Linq;
@@ -101,41 +102,30 @@ namespace Kontur.GameStats.Server
                                     listenerContext.Request.ContentEncoding))
             {
                 var text = reader.ReadToEnd();
-
-
-                //ThreadPool.QueueUserWorkItem((_) =>
-                //{
-                //    string methodName = listenerContext.Request.Url.Segments[1].Replace("/", "");
-                //    string[] strParams = listenerContext.Request.Url
-                //                            .Segments
-                //                            .Skip(2)
-                //                            .Select(s => s.Replace("/", ""))
-                //                            .ToArray();
-
-
-                //    var method = this.GetType().GetMethod(methodName);
-                //    object[] @params = method.GetParameters()
-                //                        .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
-                //                        .ToArray();
-
-                //    object ret = method.Invoke(this, @params);
-                //    //string retstr = JsonConvert.SerializeObject(ret);
-                //});
-                var parameters = _requestParser.Parse(listenerContext.Request.HttpMethod, listenerContext.Request.Url.ToString(), text);
+                var parameters = _requestParser.Parse(listenerContext.Request.HttpMethod, listenerContext.Request.Url.LocalPath, text);
                 var handler = MapRequestHandler(parameters);
-                handler.RequestHandle(parameters);
+                var response = handler.RequestHandle(parameters);
 
-                listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                listenerContext.Response.StatusCode = (int)response.StatusCode;
                 using (var writer = new StreamWriter(listenerContext.Response.OutputStream))
-                    writer.WriteLine("Hello, world!");
+                    writer.WriteLine(response.ResultText);
+                Console.WriteLine(response.StatusCode + "\n" + response.ResultText);
             }
         }
         public IRequestHandler MapRequestHandler(GameParameters parameters)
         {
             var type = parameters.GetType();
-            if(type== typeof(MatchInfoParameter))
+            if (type == typeof(PutGameInfoParameters))
             {
-                return new MachInfoHandler();
+                return new PutGameInfoHandler();
+            }
+            if (type == typeof(GetGameInfoParameters))
+            {
+                return new GetGameInfoHandler();
+            }
+            if (type == typeof(AllInfoServersParameters))
+            {
+                return new AllInfoServersHandler();
             }
             return null;
         }
