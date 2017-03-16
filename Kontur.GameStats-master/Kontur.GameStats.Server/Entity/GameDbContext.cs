@@ -15,6 +15,8 @@ namespace Kontur.GameStats.Server.Entity
         { }
         public DbSet<GameServerEntity> GameServerEntities { get; set; }
         public DbSet<InfoGameEntity> InfoGameEntities { get; set; }
+        public DbSet<InfoMatchEntity> InfoMatchEntities { get; set; }
+        public DbSet<PlayerEntity> PlayerEntities { get; set; }
 
     }
 }

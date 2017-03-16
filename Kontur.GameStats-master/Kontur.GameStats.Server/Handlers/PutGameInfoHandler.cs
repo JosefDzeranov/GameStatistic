@@ -25,10 +25,23 @@ namespace Kontur.GameStats.Server.Handlers
             var info = JsonConvert.DeserializeObject<InfoGameEntity>(param.Json);
             info.Id = Guid.NewGuid().ToString();
             var gameServer = new GameServerEntity() { Id = Guid.NewGuid().ToString(), EndPoint = param.EndPoint, InfoId = info.Id, Info = info };
+            DeleteExistGameServer(param.EndPoint);
             db.GameServerEntities.Add(gameServer);
             db.InfoGameEntities.Add(info);
             db.SaveChanges();
             return new ServerResponse() { StatusCode = HttpStatusCode.OK, ResultText = "" };
         }
+        public void DeleteExistGameServer(string endPoint)
+        {
+            var isGameServer = db.GameServerEntities.First(x => x.EndPoint == endPoint);
+            if (isGameServer == null)
+            {
+                InfoGameEntity infoGame = new InfoGameEntity() { Id = isGameServer.InfoId };
+                db.InfoGameEntities.Attach(infoGame);
+                db.InfoGameEntities.Remove(infoGame);
+                db.GameServerEntities.Remove(isGameServer);
+            }
+        }
+
     }
 }

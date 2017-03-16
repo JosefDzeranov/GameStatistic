@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.RequestParameters
 {
-    class MatchInfoParameter : GameParameters
+    class PutMatchInfoParameter : GameParameters
     {
         public string EndPoint { get; set; }
         public string Timestamp { get; set; }

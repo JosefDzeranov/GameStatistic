@@ -24,7 +24,7 @@ namespace Kontur.GameStats.Server.Handlers
                 {
                     try
                     {
-                        var info = db.InfoGameEntities.FirstOrDefault(x => x.Id == game.InfoId);
+                        var info =  db.InfoGameEntities.FirstOrDefault(x => x.Id == game.InfoId);
                         game.Info = info;
                     }
                     catch (Exception ex) { }

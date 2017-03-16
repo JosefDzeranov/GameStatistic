@@ -1,7 +1,10 @@
-﻿namespace Kontur.GameStats.Server.Models
+﻿using Newtonsoft.Json;
+
+namespace Kontur.GameStats.Server.Entity
 {
-    public class Player
+    public class PlayerEntity
     {
+        [JsonIgnoreAttribute]
         public string Id { get; set; }
         public string Name { get; set; }
         public int Frags { get; set; }

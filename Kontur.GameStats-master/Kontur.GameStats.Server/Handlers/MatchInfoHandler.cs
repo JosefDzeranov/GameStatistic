@@ -12,7 +12,7 @@ namespace Kontur.GameStats.Server.Handlers
     {
         public ServerResponse RequestHandle(GameParameters parameters)
         {
-            var param = parameters as MatchInfoParameter;
+            var param = parameters as PutMatchInfoParameter;
             return null;
         }
 

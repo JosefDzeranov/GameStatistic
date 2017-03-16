@@ -27,7 +27,7 @@ namespace Kontur.GameStats.Server.Models
             }
             if (segments[0] == "servers" && segments[2] == "matches" && httpMethod == "PUT")
             {
-                return new MatchInfoParameter() { EndPoint = segments[1], Timestamp = segments[3], Json = json };
+                return new PutMatchInfoParameter() { EndPoint = segments[1], Timestamp = segments[3], Json = json };
             }
             if (segments[2] == "servers" && segments[4] == "matches" && httpMethod == "GET")
             {

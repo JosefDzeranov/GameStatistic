@@ -63,6 +63,7 @@
     <Compile Include="Entity\GameDbContext.cs" />
     <Compile Include="Handlers\AllInfoServersHandler.cs" />
     <Compile Include="Handlers\GetGameInfoHandler.cs" />
+    <Compile Include="Handlers\PutMatchInfoHandler.cs" />
     <Compile Include="RequestParameters\AllInfoServersParameters.cs" />
     <Compile Include="RequestParameters\EmptyParametters.cs" />
     <Compile Include="Handlers\PutGameInfoHandler.cs" />
@@ -74,9 +75,9 @@
     <Compile Include="Handlers\IRequestHandler.cs" />
     <Compile Include="Models\IRequestParser.cs" />
     <Compile Include="Handlers\MatchInfoHandler.cs" />
-    <Compile Include="Models\Match.cs" />
-    <Compile Include="RequestParameters\MatchInfoParameter.cs" />
-    <Compile Include="Models\Player.cs" />
+    <Compile Include="Entity\InfoMatchEntity.cs" />
+    <Compile Include="RequestParameters\PutMatchInfoParameter.cs" />
+    <Compile Include="Entity\PlayerEntity.cs" />
     <Compile Include="Models\RequestParser.cs" />
     <Compile Include="Models\ServerResponse.cs" />
     <Compile Include="StatServer.cs" />
