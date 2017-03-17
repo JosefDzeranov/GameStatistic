@@ -1,5 +1,7 @@
 ﻿using Kontur.GameStats.Server.Entity;
+using Kontur.GameStats.Server.Helpers;
 using Kontur.GameStats.Server.Models;
+using Kontur.GameStats.Server.Reposit;
 using Kontur.GameStats.Server.RequestParameters;
 using Newtonsoft.Json;
 using System;
@@ -11,37 +13,56 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.Handlers
 {
-    class PutGameInfoHandler : IRequestHandler
+    public class PutGameInfoHandler : IRequestHandler
     {
-        private readonly GameDbContext db = new GameDbContext();
-        public PutGameInfoHandler()
-        {
+        private readonly IGameServerRepository _repository;
+        private readonly IJsonConverter _jsonConverter;
 
+        public PutGameInfoHandler(IGameServerRepository repository, IJsonConverter jsonConverter)
+        {
+            _repository = repository;
+            _jsonConverter = jsonConverter;
         }
+
+
+
         public ServerResponse RequestHandle(GameParameters parameters)
         {
-            if (parameters == null) return new ServerResponse() { StatusCode = HttpStatusCode.BadRequest, ResultText = "" };
+            if (parameters == null)
+                return new ServerResponse()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    ResultText = string.Empty
+                };
+
             var param = parameters as PutGameInfoParameters;
-            var info = JsonConvert.DeserializeObject<InfoGameEntity>(param.Json);
-            info.Id = Guid.NewGuid().ToString();
-            var gameServer = new GameServerEntity() { Id = Guid.NewGuid().ToString(), EndPoint = param.EndPoint, InfoId = info.Id, Info = info };
-            DeleteExistGameServer(param.EndPoint);
-            db.GameServerEntities.Add(gameServer);
-            db.InfoGameEntities.Add(info);
-            db.SaveChanges();
-            return new ServerResponse() { StatusCode = HttpStatusCode.OK, ResultText = "" };
-        }
-        public void DeleteExistGameServer(string endPoint)
-        {
-            var isGameServer = db.GameServerEntities.First(x => x.EndPoint == endPoint);
-            if (isGameServer == null)
+
+
+            var info = _jsonConverter.Deserialize<InfoGameEntity>(param.Json);
+           // var info2 = _jsonConverter.Deserialize<InfoGameEntity>(param.Json);
+
+            info.Id = Guid.NewGuid().ToString();//не тестируется 
+
+            var gameServer = new GameServerEntity()
             {
-                InfoGameEntity infoGame = new InfoGameEntity() { Id = isGameServer.InfoId };
-                db.InfoGameEntities.Attach(infoGame);
-                db.InfoGameEntities.Remove(infoGame);
-                db.GameServerEntities.Remove(isGameServer);
-            }
+                Id = Guid.NewGuid().ToString(),
+                EndPoint = param.EndPoint,
+                InfoId = info.Id,
+                Info = info
+            };
+
+            _repository.DeleteExistGameServer(param.EndPoint);
+
+            _repository.AddGameServer(gameServer);
+            _repository.AddGameInfo(info);
+
+            return new ServerResponse()
+            {
+                StatusCode = HttpStatusCode.OK,
+                ResultText = string.Empty
+            };
         }
+
 
     }
 }

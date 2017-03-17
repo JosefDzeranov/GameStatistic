@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.RequestParameters
 {
-    abstract class GameParameters
+    public abstract class GameParameters
     {
 
     }

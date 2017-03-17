@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.Models
 {
-    class ServerResponse
+    public class ServerResponse
     {
         public HttpStatusCode StatusCode { get; set; }
         public string ResultText { get; set; }

@@ -116,7 +116,7 @@ namespace Kontur.GameStats.Server
             var type = parameters.GetType();
             if (type == typeof(PutGameInfoParameters))
             {
-                return new PutGameInfoHandler();
+                return new PutGameInfoHandler(null, null);
             }
             if (type == typeof(GetGameInfoParameters))
             {

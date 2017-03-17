@@ -16,7 +16,7 @@ namespace Kontur.GameStats.Server.Handlers
         {
             var param = parameters as PutMatchInfoParameter;
             var match = JsonConvert.DeserializeObject<InfoMatchEntity>(param.Json);
-
+            return null;
 
         }
     }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kontur.GameStats.Server.Entity
 {
-    class GameServerEntity
+public    class GameServerEntity
     {
         [JsonIgnoreAttribute]
         public string Id { get; set; }
